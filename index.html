@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#f8f0ec" />
+  <title>Octubre: un mes para ti, mi princesa ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+    <span class="spark spark-1">✦</span>
+    <span class="spark spark-2">✧</span>
+    <span class="spark spark-3">♡</span>
+  </div>
+
+  <section class="welcome-screen" id="welcomeScreen" aria-label="Bienvenida">
+    <div class="welcome-card glass-card">
+      <div class="eyebrow">Un regalo de José para ti</div>
+      <h1>Para Kadimy,<br><em>mi princesa</em> ✨</h1>
+      <p>
+        Este mes quiero recordarte, día a día, cuánto te amo, cuánto te admiro
+        y lo feliz que soy de compartir la vida contigo.
+      </p>
+      <p class="welcome-small">Cada día guarda un pedacito de mi corazón para ti.</p>
+      <button class="primary-btn" id="startButton" type="button">
+        <span>Comenzar</span><span aria-hidden="true">♡</span>
+      </button>
+      <button class="ghost-btn" id="welcomeMusicButton" type="button">🎵 Encender música</button>
+    </div>
+  </section>
+
+  <main class="app-shell" id="appShell" aria-hidden="true">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Octubre · 31 pequeñas sorpresas</p>
+        <h2>Octubre: un mes para ti,<br><em>mi princesa</em> ✨</h2>
+        <p class="hero-copy">Abre una sorpresa cada día. Las que ya descubriste siempre podrás volver a visitarlas.</p>
+      </div>
+      <button class="music-pill" id="musicButton" type="button" aria-expanded="false">🎵 Música</button>
+    </header>
+
+    <section class="status-card glass-card" aria-live="polite">
+      <div>
+        <span class="status-label">Sorpresa de hoy</span>
+        <strong id="todayLabel">Día —</strong>
+      </div>
+      <p id="statusMessage">Preparando tu calendario…</p>
+    </section>
+
+    <section class="calendar-section" aria-labelledby="calendarTitle">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Tu calendario</p>
+          <h3 id="calendarTitle">31 días celebrando tu vida</h3>
+        </div>
+        <div class="legend" aria-label="Leyenda">
+          <span><i class="legend-dot available"></i> Hoy</span>
+          <span><i class="legend-dot opened"></i> Abierto</span>
+          <span><i class="legend-dot locked"></i> Bloqueado</span>
+        </div>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </section>
+
+    <footer class="footer-note">
+      Hecho con mucho amor, para que tengas una razón más para sonreír cada día. ♡
+    </footer>
+  </main>
+
+  <div class="modal" id="passwordModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="passwordTitle">
+    <div class="modal-backdrop" data-close="password"></div>
+    <div class="modal-card password-card">
+      <button class="close-btn" type="button" data-close="password" aria-label="Cerrar">×</button>
+      <div class="alien-scene">
+        <div class="claw-glow"></div>
+        <img src="assets/img/marcianitos.png" alt="Personajes verdes saludando" class="alien-image" />
+      </div>
+      <p class="eyebrow" id="passwordDayLabel">Día —</p>
+      <h3 id="passwordTitle">La garra ha elegido este día...</h3>
+      <p class="modal-copy">Ingresa la contraseña que José te compartió hoy.</p>
+      <form id="passwordForm" novalidate>
+        <label class="sr-only" for="passwordInput">Contraseña del día</label>
+        <input id="passwordInput" type="text" autocomplete="off" placeholder="Escribe la contraseña…" />
+        <button class="primary-btn full" type="submit">Desbloquear sorpresa ✨</button>
+      </form>
+      <p class="error-message" id="passwordError" role="alert"></p>
+    </div>
+  </div>
+
+  <div class="modal" id="messageModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="messageTitle">
+    <div class="modal-backdrop" data-close="message"></div>
+    <div class="modal-card message-card">
+      <button class="close-btn" type="button" data-close="message" aria-label="Cerrar">×</button>
+      <div class="message-topline">
+        <span class="day-badge" id="messageDayBadge">Día —</span>
+        <span class="tiny-heart">♡</span>
+      </div>
+      <h3 id="messageTitle">Título</h3>
+      <div class="message-media" id="messageMedia"></div>
+      <div class="message-body" id="messageBody"></div>
+      <blockquote id="specialQuote" class="special-quote" hidden></blockquote>
+      <button class="ghost-btn full" type="button" data-close="message">Guardar este momento ♡</button>
+    </div>
+  </div>
+
+  <div class="photo-viewer" id="photoViewer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Foto ampliada">
+    <button class="photo-viewer-backdrop" type="button" data-close-photo aria-label="Cerrar foto"></button>
+    <button class="photo-viewer-close" type="button" data-close-photo aria-label="Cerrar foto">×</button>
+    <img id="photoViewerImage" src="" alt="Recuerdo ampliado de José y Kadimy">
+  </div>
+
+  <div class="unlock-overlay" id="unlockOverlay" aria-hidden="true">
+    <div class="unlock-burst">✨</div>
+    <div class="unlock-heart">♡</div>
+    <p>Sorpresa desbloqueada</p>
+  </div>
+
+  <aside class="music-dock" id="musicDock" aria-hidden="true">
+    <div class="music-dock-header">
+      <div>
+        <span>Playlist K</span>
+        <small>Tu música para acompañar octubre</small>
+      </div>
+      <button id="hideMusicButton" type="button" aria-label="Ocultar reproductor">×</button>
+    </div>
+    <iframe
+      id="spotifyFrame"
+      title="Playlist K de Spotify"
+      width="100%"
+      height="152"
+      frameborder="0"
+      allowfullscreen=""
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy">
+    </iframe>
+    <p class="spotify-note">Si tu navegador bloquea el inicio automático, toca ▶ dentro de Spotify una vez.</p>
+  </aside>
+
+  <script src="script.js"></script>
+</body>
+</html>
