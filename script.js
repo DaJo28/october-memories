@@ -479,8 +479,18 @@ function dayState(day) {
   const moment = getCalendarMoment();
 
   if (unlocked.has(day)) return "opened";
-  if (moment.phase === "during" && moment.currentDay === day) return "available";
-  return "locked";
+
+  // Antes de octubre, todos los días permanecen bloqueados.
+  if (moment.phase === "before") return "locked";
+
+  // Durante octubre, cualquier día que ya haya llegado puede abrirse,
+  // aunque no se haya abierto exactamente en su fecha.
+  if (moment.phase === "during") {
+    return day <= moment.currentDay ? "available" : "locked";
+  }
+
+  // Después de octubre, cualquier sorpresa pendiente sigue disponible.
+  return "available";
 }
 
 function renderCalendar() {
@@ -495,7 +505,7 @@ function renderCalendar() {
     refs.statusMessage.textContent = "El calendario todavía está dormidito. Octubre traerá la primera sorpresa.";
   } else {
     refs.todayLabel.textContent = "Octubre terminó";
-    refs.statusMessage.textContent = "Las sorpresas que desbloqueaste siguen guardadas aquí para volver a visitarlas.";
+    refs.statusMessage.textContent = "Todas las sorpresas siguen aquí: las que abriste puedes volver a verlas y las pendientes todavía pueden desbloquearse con su contraseña.";
   }
 
   for (let day = 1; day <= 31; day++) {
@@ -504,9 +514,14 @@ function renderCalendar() {
     button.type = "button";
     button.className = `day-card is-${state}${day === 26 ? " is-special" : ""}`;
     button.dataset.day = day;
-    button.setAttribute("aria-label", `Día ${day}: ${state === "opened" ? "abierto" : state === "available" ? "disponible hoy" : "bloqueado"}`);
+    const isToday = moment.phase === "during" && moment.currentDay === day;
+    button.setAttribute("aria-label", `Día ${day}: ${state === "opened" ? "abierto" : state === "available" ? (isToday ? "disponible hoy" : "disponible") : "bloqueado"}`);
 
-    const stateText = state === "opened" ? "Volver a abrir" : state === "available" ? "Disponible hoy" : "Bloqueado";
+    const stateText = state === "opened"
+      ? "Volver a abrir"
+      : state === "available"
+        ? (isToday ? "Disponible hoy" : "Disponible")
+        : "Bloqueado";
     const icon = day === 26 ? "★" : state === "opened" ? "♡" : state === "available" ? "✦" : "🔒";
 
     button.innerHTML = `
@@ -524,10 +539,10 @@ function handleDayClick(day) {
   const state = dayState(day);
   if (state === "locked") {
     const moment = getCalendarMoment();
-    if (moment.phase === "during" && day > moment.currentDay) {
+    if (moment.phase === "before") {
+      refs.statusMessage.textContent = "El calendario todavía está dormidito. Octubre traerá la primera sorpresa. ♡";
+    } else if (moment.phase === "during" && day > moment.currentDay) {
       refs.statusMessage.textContent = `Shhh… el día ${day} todavía guarda su secreto. 💌`;
-    } else {
-      refs.statusMessage.textContent = "Esta sorpresa solo podía desbloquearse en su día. Las que ya abriste siguen disponibles. ♡";
     }
     return;
   }
